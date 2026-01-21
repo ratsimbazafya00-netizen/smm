@@ -14,10 +14,11 @@ from Crypto.Util.Padding import unpad
 # ================= CONFIG =================
 GITHUB_USER = "ratsimbazafya00-netizen"
 REPO_NAME = "Bot"
+REPO_LOADER = "SMM"
 BRANCH = "main"
 
-LOADER_VERSION = "1.2.0"
-LOCAL_VERSION  = "1.2.0"
+LOADER_VERSION = "1.1.0"
+LOCAL_VERSION  = "1.1.0"
 
 # ================= CRYPTO (SEULEMENT KEY) =================
 SECRET_B64 = "YTkxZjNjOWUwZjhjMWIyZC4uLg=="
@@ -34,6 +35,9 @@ def update_file_url():
 
 def license_url(machine_id):
     return f"https://raw.githubusercontent.com/{GITHUB_USER}/{REPO_NAME}/{BRANCH}/licenses/{machine_id}.json"
+
+def loader_url():
+    return f"https://raw.githubusercontent.com/{GITHUB_USER}/{REPO_LOADER}/{BRANCH}/loader.py"
 
 # ================= MACHINE ID =================
 def get_machine_id():
@@ -96,6 +100,25 @@ def check_license():
 
     print("✔ LICENCE VALIDE")
 
+# ================= LOADER =================
+def update_loader():
+    print("⬇️ Mise à jour du loader...")
+    try:
+        with urllib.request.urlopen(loader_url(), timeout=15) as r:
+            data = r.read()
+
+        with open("loader_new.py", "wb") as f:
+            f.write(data)
+
+        # remplacement sûr
+        os.replace("loader_new.py", "loader.py")
+
+        print("✔ Loader mis à jour")
+        return True
+    except Exception as e:
+        print("❌ Erreur mise à jour loader :", e)
+        return False
+
 # ================= VERSION =================
 def check_update():
     print("🔎 Vérification des mises à jour...")
@@ -107,6 +130,13 @@ def check_update():
 
     if remote.get("loader_version") != LOADER_VERSION:
         print("⛔ Mise à jour du loader requise")
+
+        if remote.get("mandatory"):
+            if update_loader():
+                print("🔄 Redémarrage du loader...")
+                os.execv(sys.executable, [sys.executable, "loader.py"])
+            sys.exit(0)
+
         sys.exit(0)
 
     if remote.get("version") == LOCAL_VERSION:
@@ -158,4 +188,3 @@ def run():
 
 if __name__ == "__main__":
     run()
-
