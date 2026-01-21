@@ -17,8 +17,8 @@ REPO_NAME = "Bot"
 REPO_LOADER = "SMM"
 BRANCH = "main"
 
-LOADER_VERSION = "1.1.0"
-LOCAL_VERSION  = "1.1.0"
+LOADER_VERSION = "1.2.0"
+LOCAL_VERSION  = "1.2.0"
 
 # ================= CRYPTO (SEULEMENT KEY) =================
 SECRET_B64 = "YTkxZjNjOWUwZjhjMWIyZC4uLg=="
@@ -188,3 +188,4 @@ def run():
 
 if __name__ == "__main__":
     run()
+
